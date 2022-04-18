@@ -1,7 +1,8 @@
 use clap::{Arg, Command};
-use log::error;
 
-fn main() {
+mod configuration;
+
+fn main() -> Result<(), String> {
     let matches = Command::new(clap::crate_name!())
         .author(clap::crate_authors!())
         .about(clap::crate_description!())
@@ -18,7 +19,6 @@ fn main() {
                 .arg(
                     Arg::new("api_key")
                         .help("Set provider API key")
-                        .required(true)
                 )
                 .arg_required_else_help(true)
         )
@@ -42,14 +42,25 @@ fn main() {
     match matches.subcommand() {
         Some(("configure", subcommand_matches)) => {
             let provider = subcommand_matches.value_of("provider").unwrap();
-            let api_key = subcommand_matches.value_of("api_key").unwrap();
-            println!("provider ({}) api_key({})", provider, api_key);
+            let api_key = subcommand_matches.value_of("api_key");
+            match configuration::configure_provider(provider, api_key) {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
         }
         Some(("get", subcommand_matches)) => {
             let address = subcommand_matches.value_of("address").unwrap();
             let date = subcommand_matches.value_of("date").unwrap_or_default();
-            println!("address ({}) date({})", address, date);
+            match configuration::get_provider_info() {
+                Ok(config) => {}
+                Err(e) => return Err(e),
+            }
         }
-        _ => error!("Wrong number of arguments provided"),
-    }
+        _ => {
+            eprintln!("Wrong number of arguments provided");
+            std::process::exit(exitcode::USAGE);
+        }
+    };
+
+    Ok(())
 }

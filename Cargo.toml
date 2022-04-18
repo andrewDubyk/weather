@@ -2,9 +2,10 @@
 name = "weather"
 version = "0.1.0"
 edition = "2021"
-author = "Andrii D"
+authors = ["Andrii D"]
 description = "Weather CLI application for Windows/Linux/macOS"
 
 [dependencies]
 clap = { version = "3.1.9", features = ["derive", "cargo"] }
-log = "0.4.16"
+exitcode = "1.1.2"
+whoami = "1.2.1"
