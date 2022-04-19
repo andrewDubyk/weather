@@ -3,6 +3,7 @@ use crate::api::Provider;
 
 use reqwest::Url;
 
+/// Base URI for openweather API
 const OPENWEATHER_BASE_API_URI: &str = "https://api.openweathermap.org/data/2.5";
 
 /// Openweather provider struct

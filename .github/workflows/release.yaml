@@ -1,0 +1,48 @@
+on:
+  push:
+    tags:
+    - 'v*'
+
+name: Release
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+          os: [ubuntu-latest, windows-2019, macos-latest]
+
+    name: Release Packaging
+    env:
+      PROJECT_NAME_UNDERSCORE: weather
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - name: Release Build
+        run: cargo build --release
+
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.PROJECT_NAME_UNDERSCORE }}-${{ matrix.os }}.zip
+          path: |
+            target/release/${{ env.PROJECT_NAME_UNDERSCORE }}.*
+            target/release/${{ env.PROJECT_NAME_UNDERSCORE }}
+          if-no-files-found: 'ignore'
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false

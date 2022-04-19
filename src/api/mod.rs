@@ -6,7 +6,7 @@ use self::weatherapi::provider::Weatherapi;
 
 /// Common trait for all supported porviders
 pub trait Provider {
-    /// Returns String with fetched weather data or error details
+    /// Returns String with fetched weather data or error details otherwise
     ///
     /// # Arguments
     ///
@@ -28,5 +28,40 @@ pub fn new_provider(name: String, api_key: String) -> Box<dyn Provider> {
         "openweather" => Box::new(Openweather { api_key }),
         "weatherapi" => Box::new(Weatherapi { api_key }),
         _ => panic!("Provider {} is not supported", name),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_returns_openweather_ok() {
+        let provider = new_provider(
+            "openweather".to_string(),
+            std::env::var("OPENWEATHER_API_KEY").unwrap(),
+        );
+        assert!(provider.get_weather("London", None).is_ok())
+    }
+
+    #[test]
+    fn it_returns_openweather_error() {
+        let provider = new_provider("openweather".to_string(), "".to_string());
+        assert!(provider.get_weather("", None).is_err())
+    }
+
+    #[test]
+    fn it_returns_weatherapi_ok() {
+        let provider = new_provider(
+            "weatherapi".to_string(),
+            std::env::var("WEATHERAPI_API_KEY").unwrap(),
+        );
+        assert!(provider.get_weather("Paris", None).is_ok())
+    }
+
+    #[test]
+    fn it_returns_weatherapi_error() {
+        let provider = new_provider("weatherapi".to_string(), "".to_string());
+        assert!(provider.get_weather("", None).is_err())
     }
 }

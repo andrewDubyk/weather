@@ -1,16 +1,18 @@
 on:
   pull_request:
-  push:
-    branches:
-      - main
+    types: [opened]
 
-
-name: Check/Fmt/Lint
+name: Verify
 
 jobs:
   check:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+          os: [ubuntu-latest, windows-2019, macos-latest]
+
     name: Check
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -23,8 +25,13 @@ jobs:
           command: check
 
   fmt:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+          os: [ubuntu-latest]
+
     name: Rustfmt
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -39,8 +46,13 @@ jobs:
           args: --all -- --check
 
   clippy:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+          os: [ubuntu-latest]
+
     name: Clippy
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1

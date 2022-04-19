@@ -1,8 +1,6 @@
 on:
   pull_request:
-  push:
-    branches:
-      - main
+    types: [opened]
 
 name: Test with Code Coverage
 
@@ -10,10 +8,12 @@ jobs:
   test:
     name: Test
     env:
-      PROJECT_NAME_UNDERSCORE: rust_ci_github_actions_workflow
+      PROJECT_NAME_UNDERSCORE: weather
       CARGO_INCREMENTAL: 0
       RUSTFLAGS: -Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Zpanic_abort_tests -Cpanic=abort
       RUSTDOCFLAGS: -Cpanic=abort
+      OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+      WEATHERAPI_API_KEY: ${{ secrets.WEATHERAPI_API_KEY }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -51,6 +51,6 @@ jobs:
         uses: codecov/codecov-action@v1
         with:
           # required for private repositories:
-          # token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: ./lcov.info
           fail_ci_if_error: true

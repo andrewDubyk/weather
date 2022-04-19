@@ -3,6 +3,7 @@ use crate::api::Provider;
 
 use reqwest::Url;
 
+/// Base URI for weatherapi API
 const WEATHERAPI_BASE_API_URI: &str = "https://api.weatherapi.com/v1";
 
 /// Weatherapi provider struct
