@@ -15,6 +15,7 @@ fn main() -> Result<(), String> {
                     Arg::new("provider")
                         .help("Set provider name")
                         .required(true)
+                        .possible_values(["openweather", "weatherapi"])
                 )
                 .arg(
                     Arg::new("api_key")
