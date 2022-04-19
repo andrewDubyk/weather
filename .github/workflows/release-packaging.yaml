@@ -12,3 +12,7 @@ jobs:
     steps:
     - name: Build and upload Rust binary to GitHub Releases
       uses: taiki-e/upload-rust-binary-action@v1.2.0
+      with:
+          profile: minimal
+          toolchain: stable
+          override: true
