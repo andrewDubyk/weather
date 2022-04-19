@@ -5,11 +5,20 @@ use reqwest::Url;
 
 const WEATHERAPI_BASE_API_URI: &str = "https://api.weatherapi.com/v1";
 
+/// Weatherapi provider struct
 pub struct Weatherapi {
+    /// API_KEY for provider services
     pub(crate) api_key: String,
 }
 
+/// Weatherapi provider internal implementation
 impl Weatherapi {
+    /// Returns String with fetched weather data for current date or error details
+    ///
+    /// # Arguments
+    ///
+    /// * `address` - Location where to get weather information
+    ///
     pub fn get_weather_now(&self, address: &str) -> Result<String, String> {
         let url = format!(
             "{}/current.json?q={}&key={}",
@@ -33,7 +42,9 @@ impl Weatherapi {
     }
 }
 
+/// Provider interface implementation for Weatherapi provider
 impl Provider for Weatherapi {
+    /// Trait get_weather implementation
     fn get_weather(&self, address: &str, date: Option<&str>) -> Result<String, String> {
         match date {
             Some(date) => Err(format!(

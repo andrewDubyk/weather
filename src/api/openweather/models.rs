@@ -1,7 +1,6 @@
 use serde_derive::{Deserialize, Serialize};
 
-// this struct holds the json response from the open weather api
-// each struct represents a json object in the response payload
+/// Base struct that holds the json response from the Openweather
 #[derive(Serialize, Deserialize, Debug)]
 pub struct OpenweatherData {
     pub coord: Coord,
@@ -69,6 +68,7 @@ struct Sys {
 }
 
 impl OpenweatherData {
+    /// Returns String with currently fetched weather information
     pub fn current_to_text(&self) -> String {
         format!(
             "Temperature: {:.1}°F\n\

@@ -5,11 +5,20 @@ use reqwest::Url;
 
 const OPENWEATHER_BASE_API_URI: &str = "https://api.openweathermap.org/data/2.5";
 
+/// Openweather provider struct
 pub struct Openweather {
+    /// API_KEY for provider services
     pub(crate) api_key: String,
 }
 
+/// Openweather provider internal implementation
 impl Openweather {
+    /// Returns String with fetched weather data for current date or error details
+    ///
+    /// # Arguments
+    ///
+    /// * `address` - Location where to get weather information
+    ///
     pub fn get_weather_now(&self, address: &str) -> Result<String, String> {
         let url = format!(
             "{}/weather?q={}&appid={}",
@@ -33,7 +42,9 @@ impl Openweather {
     }
 }
 
+/// Provider interface implementation for Openweather provider
 impl Provider for Openweather {
+    /// Trait get_weather implementation
     fn get_weather(&self, address: &str, date: Option<&str>) -> Result<String, String> {
         match date {
             Some(date) => Err(format!(
