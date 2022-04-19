@@ -12,9 +12,7 @@ const ACTIVE_PROVIDER_FILE_NAME: &str = "active";
 
 /// Returns uniqe id based on user information
 fn get_user_config_id() -> String {
-    let user_config_id = format!("{}_{}", whoami::hostname(), whoami::username());
-    println!("User unique id : {user_config_id}");
-    user_config_id
+    format!("{}_{}", whoami::hostname(), whoami::username())
 }
 
 /// Returns path to configuration directory for user
