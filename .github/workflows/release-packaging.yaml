@@ -13,4 +13,4 @@ jobs:
     - name: Build and upload Rust binary to GitHub Releases
       uses: taiki-e/upload-rust-binary-action@v1.2.0
       with:
-          token: ${{ secrets.GITHUB_TOKEN }
+          token: ${{ secrets.GITHUB_TOKEN }}
