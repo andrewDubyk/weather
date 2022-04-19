@@ -1,6 +1,3 @@
-use crate::api::Provider;
-
-use reqwest::Url;
 use serde_derive::{Deserialize, Serialize};
 
 // this struct holds the json response from the open weather api
@@ -71,8 +68,8 @@ struct Sys {
     sunset: i32,
 }
 
-impl ToString for OpenweatherData {
-    fn to_string(&self) -> String {
+impl OpenweatherData {
+    pub fn current_to_text(&self) -> String {
         format!(
             "Temperature: {:.1}°F\n\
              Wind: {:.0} miles/hr\n\
@@ -80,47 +77,5 @@ impl ToString for OpenweatherData {
              Description: {}",
             self.main.feels_like, self.wind.speed, self.main.humidity, self.weather.details.main
         )
-    }
-}
-
-const OPENWEATHER_BASE_API_URI: &str = "https://api.openweathermap.org/data/2.5";
-
-pub struct Openweather {
-    pub(crate) api_key: String,
-}
-
-impl Openweather {
-    pub fn get_weather_now(&self, address: &str) -> Result<String, String> {
-        let url = format!(
-            "{}/weather?q={}&appid={}",
-            OPENWEATHER_BASE_API_URI, address, self.api_key
-        );
-
-        let url = match Url::parse(url.as_str()) {
-            Ok(url) => url,
-            Err(e) => return Err(format!("Failed to parse url : {}", e)),
-        };
-
-        let data = match reqwest::blocking::get(url) {
-            Ok(response) => match response.json::<OpenweatherData>() {
-                Ok(data) => data,
-                Err(e) => return Err(format!("Failed to parse weather data : {}", e)),
-            },
-            Err(e) => return Err(format!("Failed to fetch weather data : {}", e)),
-        };
-
-        Ok(data.to_string())
-    }
-}
-
-impl Provider for Openweather {
-    fn get_weather(&self, address: &str, date: Option<&str>) -> Result<String, String> {
-        match date {
-            Some(date) => Err(format!(
-                "Openweather API doesn't support date forecats for {}",
-                date
-            )),
-            None => self.get_weather_now(address),
-        }
     }
 }
