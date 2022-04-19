@@ -1,39 +1,27 @@
-name: Release
-
 on:
   push:
-    tags:
-      - v[0-9]+.*
+    branches:
+      - main
+
+name: Release Packaging
 
 jobs:
-  create-release:
+  release:
+    name: Release Packaging
+    env:
+      PROJECT_NAME_UNDERSCORE: rust_ci_github_actions_workflow
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: taiki-e/create-gh-release-action@v1
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
         with:
-          # (Optional) Path to changelog.
-          changelog: CHANGELOG.md
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-# on:
-#   push:
-#     branches:
-#       - main
-#     tags: ["[0-9]+.[0-9]+.[0-9]+*"]
-
-
-# name: Create Release Draft
-
-# jobs:
-#   linux:
-#     name: Build Linux
-#     runs-on: ubuntu-latest
-#     steps:
-#     - name: Build and upload Rust binary to GitHub Releases
-#       uses: taiki-e/upload-rust-binary-action@v1.2.0
-#       env:
-#           GITHUB_REF: ${{ github.ref }}
-#       with:
-#           token: ${{ secrets.GITHUB_TOKEN }}
+          profile: minimal
+          toolchain: stable
+          override: true
+      - name: Release Build
+        run: cargo build --release
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.PROJECT_NAME_UNDERSCORE }}
+          path: target/release/${{ env.PROJECT_NAME_UNDERSCORE }}
