@@ -3,10 +3,12 @@ on:
     branches:
       - main
 
+name: Create Release Draft
+
 jobs:
-  release:
-    name: Release Packaging
+  linux:
+    name: Build Linux
     runs-on: ubuntu-latest
     steps:
-      - uses: taiki-e/upload-rust-binary-action@v1.2.0
-
+    - name: Build and upload Rust binary to GitHub Releases
+      uses: taiki-e/upload-rust-binary-action@v1.2.0
