@@ -1,6 +1,7 @@
-use clap::{Arg, Command};
-
+mod api;
 mod configuration;
+
+use clap::{Arg, Command};
 
 fn main() -> Result<(), String> {
     let matches = Command::new(clap::crate_name!())
@@ -51,9 +52,17 @@ fn main() -> Result<(), String> {
         }
         Some(("get", subcommand_matches)) => {
             let address = subcommand_matches.value_of("address").unwrap();
-            let date = subcommand_matches.value_of("date").unwrap_or_default();
+            let date = subcommand_matches.value_of("date");
             match configuration::get_provider_info() {
-                Ok(config) => {}
+                Ok(config) => {
+                    let provider = api::new_provider(config.0, config.1);
+                    match provider.get_weather(address, date) {
+                        Ok(res) => {
+                            println!("Result : {}", res)
+                        }
+                        Err(e) => return Err(e),
+                    }
+                }
                 Err(e) => return Err(e),
             }
         }

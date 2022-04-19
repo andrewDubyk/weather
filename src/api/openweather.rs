@@ -1,5 +1,16 @@
-struct OpenweatherImpl {}
+use crate::api::Provider;
 
-impl ProviderApi for OpenweatherImpl {
-    pub fn get_weather(&self, address: &str, date: Option<&str>) -> Result<String, String> {}
+pub struct Openweather {
+    pub(crate) api_key: String,
+}
+
+impl Provider for Openweather {
+    fn get_weather(&self, address: &str, date: Option<&str>) -> Result<String, String> {
+        Ok(format!(
+            "hello from Openweather get weather : {} {} {}",
+            address,
+            date.unwrap_or_default(),
+            self.api_key
+        ))
+    }
 }
