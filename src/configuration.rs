@@ -3,7 +3,6 @@ use std::fs;
 use std::io;
 use std::io::Write;
 use std::path;
-use whoami;
 
 /// Name of the configuration folder
 const CONFIG_DIR_NAME: &str = "weather_configs";
@@ -20,7 +19,7 @@ fn get_user_config_dir_path() -> Result<path::PathBuf, String> {
     match env::current_exe() {
         Ok(path) => match path.parent() {
             Some(path) => Ok(path.join(CONFIG_DIR_NAME).join(get_user_config_id())),
-            None => Err(format!("Failed to get configuration directory path")),
+            None => Err("Failed to get configuration directory path".to_string()),
         },
         Err(e) => Err(format!("Failed to get exectable path : {}", e)),
     }
@@ -44,7 +43,7 @@ fn get_active_provider_config_path() -> Result<path::PathBuf, String> {
 ///
 /// * `provider` - String reference wth provider name
 ///
-fn get_provider_config_path(provider: &String) -> Result<path::PathBuf, String> {
+fn get_provider_config_path(provider: &str) -> Result<path::PathBuf, String> {
     let provider_config_path = match get_user_config_dir_path() {
         Ok(path) => path.join(provider),
         Err(e) => {
@@ -52,7 +51,7 @@ fn get_provider_config_path(provider: &String) -> Result<path::PathBuf, String> 
         }
     };
 
-    if !path::Path::new(&provider_config_path.to_path_buf()).exists() {
+    if !path::Path::new(&provider_config_path).exists() {
         return Err(format!(
             "Configuration for provider {} was not found",
             provider
@@ -69,7 +68,7 @@ fn get_provider_config_path(provider: &String) -> Result<path::PathBuf, String> 
 /// * `file_path` - PathBuf object with path to file which sould be created/updated
 /// * `data` - String slice data to write to file
 ///
-fn update_config(file_path: &path::PathBuf, data: &str) -> io::Result<()> {
+fn update_config(file_path: &path::Path, data: &str) -> io::Result<()> {
     fs::OpenOptions::new()
         .create(true)
         .write(true)
@@ -113,8 +112,8 @@ fn get_active_provider() -> Result<String, String> {
 ///
 /// * `provider` - String reference wth provider name
 ///
-fn get_provider_api_key(provider: &String) -> Result<String, String> {
-    let provider_api_key = match get_provider_config_path(&provider) {
+fn get_provider_api_key(provider: &str) -> Result<String, String> {
+    let provider_api_key = match get_provider_config_path(provider) {
         Ok(path) => match read_config(&path) {
             Ok(data) => data,
             Err(e) => return Err(e),
@@ -159,8 +158,8 @@ pub fn configure_provider(provider: &str, api_key: Option<&str>) -> Result<(), S
         }
     }
 
-    match api_key {
-        Some(api_key) => match update_config(&config_dir.join(provider), api_key) {
+    if let Some(api_key) = api_key {
+        match update_config(&config_dir.join(provider), api_key) {
             Ok(_) => {
                 println!("Successfully update provider API_KEY configuration");
             }
@@ -170,8 +169,7 @@ pub fn configure_provider(provider: &str, api_key: Option<&str>) -> Result<(), S
                     e
                 ));
             }
-        },
-        None => (),
+        }
     }
 
     match update_config(&config_dir.join(ACTIVE_PROVIDER_FILE_NAME), provider) {
