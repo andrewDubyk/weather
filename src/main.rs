@@ -58,7 +58,7 @@ fn main() -> Result<(), String> {
                     let provider = api::new_provider(config.0, config.1);
                     match provider.get_weather(address, date) {
                         Ok(res) => {
-                            println!("Result : {}", res)
+                            println!("Result :\n{}", res)
                         }
                         Err(e) => return Err(e),
                     }
