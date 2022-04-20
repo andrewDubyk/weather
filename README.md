@@ -30,7 +30,7 @@ The whole project consts of next modules:
     - Thers is a common `Trait` which should be implemented for all privders;
     - Currently all providers use HTTP REST API for requests;
 
-Basic provider functionality is covered withunit tests.
+Basic provider functionality is covered withunit tests. [codecov.io](https://codecov.io/) used for coverage.
 
 ## Limitations
 
