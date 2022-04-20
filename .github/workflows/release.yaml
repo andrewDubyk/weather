@@ -6,7 +6,7 @@ on:
 name: Release
 
 jobs:
-  release:
+  artifacts:
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -36,9 +36,10 @@ jobs:
             target/release/${{ env.PROJECT_NAME_UNDERSCORE }}
           if-no-files-found: 'ignore'
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+  release:
+    name: Create Release
+    steps:
+      - uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
