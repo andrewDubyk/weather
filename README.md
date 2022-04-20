@@ -26,9 +26,11 @@ For more details check https://github.com/andrewDubyk/weather/actions
 The whole project consts of next modules:
 
 - `configuration` - handle user defined configurations (configure provider, change provider, set API_KEY)
-- `api` - responsible for access to weather API providers. Thers is a common `Trait` which should be implemented for all privders.
+- `api` - responsible for access to weather API providers.
+    - Thers is a common `Trait` which should be implemented for all privders;
+    - Currently all providers use HTTP REST API for requests;
 
-Basic provider functionality is covered withunit tests (will be run automatically when PR to main opened).
+Basic provider functionality is covered withunit tests.
 
 ## Limitations
 
