@@ -1,5 +1,9 @@
 
 # Weather
+
+[![Verify](https://github.com/andrewDubyk/weather/actions/workflows/verify.yaml/badge.svg)](https://github.com/andrewDubyk/weather/actions/workflows/verify.yaml) [![Test with Code Coverage](https://github.com/andrewDubyk/weather/actions/workflows/test.yaml/badge.svg)](https://github.com/andrewDubyk/weather/actions/workflows/test.yaml)
+
+
 Weather CLI for Windows/Linux/macOS, which is responsible for showing weather to a user. The target consumer of the CLI is a human.
 
 Currently next providers are supported:
