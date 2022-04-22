@@ -31,7 +31,7 @@ The whole project consts of next modules:
 
 - `configuration` - handle user defined configurations (configure provider, change provider, set API_KEY)
 - `api` - responsible for access to weather API providers.
-    - Thers is a common `Trait` which should be implemented for all privders;
+    - Thers is a common `Trait` which should be implemented for all providers;
     - Currently all providers use HTTP REST API for requests;
 
 Basic provider functionality is covered withunit tests. [codecov.io](https://codecov.io/) used for coverage.
